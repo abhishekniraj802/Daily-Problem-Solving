@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    int missingNumber(int n, vector<int>& arr) {
+        // Calculate the sum of numbers from 1 to n
+        int totalSum = n * (n + 1) / 2;
+        
+        // Calculate the sum of elements in the array
+        int arrSum = 0;
+        for(int num : arr) {
+            arrSum += num;
+        }
+        
+        // The missing number is the difference between the expected sum and the actual sum
+        return totalSum - arrSum;
+    }
+};
+
+//OR ONE MORE SOLUTION
+
+class Solution {
+  public:
+
+    // Note that the size of the array is n-1
+    int missingNumber(int n, vector<int>& arr) {
+
+        // Your code goes here
+        sort(arr.begin(),arr.end());
+        for(int i=1;i<n;i++){
+            if(arr[i-1]!=i){
+                return i;
+            }
+        }
+        return n;
+    }
+};
+
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        cin >> n;
+
+        vector<int> arr(n - 1);
+        for (int i = 0; i < n - 1; ++i)
+            cin >> arr[i];
+        Solution obj;
+        cout << obj.missingNumber(n, arr) << "\n";
+    }
+    return 0;
+}
