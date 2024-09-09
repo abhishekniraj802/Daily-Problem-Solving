@@ -1,0 +1,58 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    void sort012(vector<int>& arr) {
+        int ones = 0, twos = 0, zeros = 0;
+        
+        // Count the number of 0s, 1s, and 2s
+        for(int i = 0; i < arr.size(); i++) {
+            if(arr[i] == 0) {
+                zeros++;
+            } else if(arr[i] == 1) {
+                ones++;
+            } else if(arr[i] == 2) {
+                twos++;
+            }
+        }
+        
+        // Place 0s, 1s, and 2s in the array based on the counts
+        int i = 0;
+        while(zeros--) arr[i++] = 0;
+        while(ones--) arr[i++] = 1;
+        while(twos--) arr[i++] = 2;
+    }
+};
+
+int main() {
+    Solution solution;
+    int n;
+
+    // Input size of array
+    cout << "Enter the size of the array: ";
+    cin >> n;
+
+    vector<int> arr(n);
+    
+    // Input elements of array
+    cout << "Enter the elements (only 0, 1, 2): ";
+    for(int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+    
+    // Call the sort012 function
+    solution.sort012(arr);
+    
+    // Output the sorted array
+    cout << "Sorted array: ";
+    for(int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+    
+    return 0;
+}
+// Example : Input: arr[]= [0, 2, 1, 2, 0]
+Output: 0 0 1 2 2
+Explanation: 0s 1s and 2s are segregated into ascending order.
