@@ -1,0 +1,79 @@
+// Hard problem Circle of String.
+
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    bool isCircle(vector<string> &arr) {
+        int n = arr.size();
+        vector<int> adj[26];
+        vector<int> inDegree(26, 0), outDegree(26, 0);
+        vector<bool> mark(26, false);
+
+        for (int i = 0; i < n; i++) {
+            int u = arr[i][0] - 'a';
+            int v = arr[i].back() - 'a';
+
+            adj[u].push_back(v);
+
+            outDegree[u]++;
+            inDegree[v]++;
+
+            mark[u] = mark[v] = true;
+        }
+
+        // Check if inDegree and outDegree are the same for each character
+        for (int i = 0; i < 26; i++) {
+            if (inDegree[i] != outDegree[i])
+                return false;
+        }
+
+        // BFS to check if all nodes with edges are connected
+        queue<int> q;
+        vector<bool> vis(26, false);
+        q.push(arr[0][0] - 'a');
+        vis[arr[0][0] - 'a'] = true;
+
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            for (int adjNode : adj[node]) {
+                if (!vis[adjNode]) {
+                    vis[adjNode] = true;
+                    q.push(adjNode);
+                }
+            }
+        }
+
+        // Check if all marked nodes (characters that appear) are visited
+        for (int i = 0; i < 26; i++) {
+            if (mark[i] && !vis[i])
+                return false;
+        }
+
+        return true;
+    }
+};
+
+int main() {
+    int t; // number of test cases
+    cin >> t;
+    while (t--) {
+        int n; // number of strings in this test case
+        cin >> n;
+        vector<string> arr(n);
+        for (int i = 0; i < n; i++) {
+            cin >> arr[i];
+        }
+
+        Solution sol;
+        if (sol.isCircle(arr)) {
+            cout << "Yes" << endl;
+        } else {
+            cout << "No" << endl;
+        }
+    }
+    return 0;
+}
+
