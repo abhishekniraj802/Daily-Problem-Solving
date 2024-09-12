@@ -1,0 +1,80 @@
+#include <iostream>
+using namespace std;
+
+// Definition of the Node class
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int val) {  // Constructor to initialize node
+        data = val;
+        next = NULL;
+    }
+};
+
+// Definition of the Solution class
+class Solution {
+public:
+    // Function to return data of the middle node. If linked list is empty, then -1
+    int getMiddle(Node* head) {
+        if (head == NULL) {
+            return -1; // Return -1 for empty list
+        }
+        Node* slow = head;
+        Node* fast = head;
+
+        // Move fast two steps and slow one step at a time
+        while (fast != NULL && fast->next != NULL) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        // When fast reaches the end, slow will be at the middle
+        return slow->data;
+    }
+};
+
+// Function to insert a new node at the end of the list
+void append(Node*& head, int new_data) {
+    Node* new_node = new Node(new_data);  // Allocate new node
+    if (head == NULL) {  // If list is empty, make the new node the head
+        head = new_node;
+        return;
+    }
+
+    Node* last = head;  // Traverse to the last node
+    while (last->next != NULL) {
+        last = last->next;
+    }
+    
+    last->next = new_node;  // Link the new node at the end
+}
+
+// Function to print the list (optional, for testing)
+void printList(Node* node) {
+    while (node != NULL) {
+        cout << node->data << " ";
+        node = node->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    Node* head = NULL;  // Start with an empty list
+    Solution sol;  // Create a Solution object
+
+    int n;
+    cout << "Enter the number of nodes: ";
+    cin >> n;
+
+    cout << "Enter the values for the linked list: ";
+    for (int i = 0; i < n; i++) {
+        int value;
+        cin >> value;
+        append(head, value);  // Append each new value to the list
+    }
+
+    cout << "Middle element: " << sol.getMiddle(head) << endl;  // Get and print the middle element
+    return 0;
+}
