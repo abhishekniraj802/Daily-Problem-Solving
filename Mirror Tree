@@ -1,0 +1,130 @@
+#include <iostream>
+#include <sstream>
+#include <queue>
+using namespace std;
+
+// Node structure for the tree
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+    
+    Node(int val) {
+        data = val;
+        left = NULL;
+        right = NULL;
+    }
+};
+
+// Function to build a binary tree from a string input
+Node* buildTree(string str) {
+    // If the input is empty or starts with 'N', return NULL
+    if (str.length() == 0 || str[0] == 'N') return NULL;
+
+    // Create a vector of strings from the input string
+    istringstream iss(str);
+    string word;
+    vector<string> ip;
+    
+    while (iss >> word) {
+        ip.push_back(word);
+    }
+
+    // Create the root of the tree
+    Node* root = new Node(stoi(ip[0]));
+
+    // Push the root to the queue
+    queue<Node*> queue;
+    queue.push(root);
+
+    // Starting from the second element
+    int i = 1;
+    while (!queue.empty() && i < ip.size()) {
+        // Get and remove the front of the queue
+        Node* currNode = queue.front();
+        queue.pop();
+
+        // Get the current node's value from the string
+        string currVal = ip[i];
+
+        // If the left child is not null
+        if (currVal != "N") {
+            // Create the left child for the current node
+            currNode->left = new Node(stoi(currVal));
+
+            // Push it to the queue
+            queue.push(currNode->left);
+        }
+
+        // For the right child
+        i++;
+        if (i >= ip.size())
+            break;
+
+        currVal = ip[i];
+
+        // If the right child is not null
+        if (currVal != "N") {
+            // Create the right child for the current node
+            currNode->right = new Node(stoi(currVal));
+
+            // Push it to the queue
+            queue.push(currNode->right);
+        }
+        i++;
+    }
+
+    return root;
+}
+
+// Function to perform in-order traversal of the binary tree
+void inOrder(Node* node) {
+    if (node == NULL) return;
+
+    // Recursively call for the left subtree
+    inOrder(node->left);
+
+    // Print the root node's data
+    cout << node->data << " ";
+
+    // Recursively call for the right subtree
+    inOrder(node->right);
+}
+
+// Solution class with the mirror function
+class Solution {
+  public:
+    // Function to convert a binary tree into its mirror tree.
+    void mirror(Node* node) {
+        if (node == NULL)
+            return;
+
+        // Recursively mirror the left and right subtrees
+        mirror(node->left);
+        mirror(node->right);
+
+        // Swap the left and right subtrees
+        swap(node->left, node->right);
+    }
+};
+
+int main() {
+    int t;
+    cin >> t;
+    cin.ignore();  // Ignore the newline after the number of test cases
+
+    while (t--) {
+        string s;
+        getline(cin, s);  // Read the input string
+
+        Node* root = buildTree(s);  // Build the tree from the input string
+
+        Solution sol;
+        sol.mirror(root);  // Mirror the tree
+
+        inOrder(root);  // Print the in-order traversal of the mirrored tree
+        cout << endl;
+    }
+
+    return 0;
+}
