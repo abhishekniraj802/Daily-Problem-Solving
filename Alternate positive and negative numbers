@@ -1,0 +1,65 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    void rearrange(vector<int> &arr) {
+        int n = arr.size();
+        // Create vectors to store positive and negative numbers
+        vector<int> pos, neg;
+
+        // Separate positive and negative numbers
+        for (int i = 0; i < n; i++) {
+            if (arr[i] >= 0)  // If the number is positive or zero, add it to pos array
+                pos.push_back(arr[i]);
+            else  // Otherwise, add it to neg array
+                neg.push_back(arr[i]);
+        }
+
+        // Refill the array alternatively with positive and negative numbers
+        int i = 0, j = 0, index = 0;
+        while (i < pos.size() && j < neg.size()) {
+            arr[index++] = pos[i++];
+            arr[index++] = neg[j++];
+        }
+
+        // Add remaining positive numbers, if any
+        while (i < pos.size())
+            arr[index++] = pos[i++];
+
+        // Add remaining negative numbers, if any
+        while (j < neg.size())
+            arr[index++] = neg[j++];
+    }
+};
+
+int main() {
+    int n;
+    // Input number of test cases
+    cin >> n;
+
+    while (n-- > 0) {
+        int size;
+        // Input size of the array
+        cin >> size;
+        vector<int> arr(size);
+
+        // Input elements of the array
+        for (int i = 0; i < size; i++) {
+            cin >> arr[i];
+        }
+
+        // Create a solution object and call the rearrange method
+        Solution sol;
+        sol.rearrange(arr);
+
+        // Output the rearranged array
+        for (int i = 0; i < size; i++) {
+            cout << arr[i] << " ";
+        }
+        cout << endl;
+    }
+
+    return 0;
+}
