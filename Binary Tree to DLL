@@ -1,0 +1,122 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+
+// Definition for a binary tree node
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = right = nullptr;
+    }
+};
+
+class Solution {
+public:
+    Node* prev = nullptr;  // To track the previously processed node
+
+    // Function to convert Binary Tree to Doubly Linked List (DLL)
+    Node* bToDLL(Node* root) {
+        // Base case
+        if (root == nullptr) {
+            return nullptr;
+        }
+
+        Node* head = nullptr;
+
+        // Recursively convert the left subtree
+        head = bToDLL(root->left);
+
+        // If this is the leftmost node, it becomes the head of the DLL
+        if (prev == nullptr) {
+            head = root;
+        } else {
+            // Adjust the pointers
+            prev->right = root;
+            root->left = prev;
+        }
+
+        // Update the previous pointer to the current root
+        prev = root;
+
+        // Recursively convert the right subtree
+        bToDLL(root->right);
+
+        return head;
+    }
+
+    // Function to print the doubly linked list
+    void printList(Node* head) {
+        Node* temp = head;
+        while (temp != nullptr) {
+            cout << temp->data << " ";
+            temp = temp->right;
+        }
+    }
+
+    // Utility function to build a binary tree from n inputs using level order
+    Node* buildTree(int inputs[], int n) {
+        if (n == 0) {
+            return nullptr;
+        }
+
+        // Create the root node
+        Node* root = new Node(inputs[0]);
+        queue<Node*> q;
+        q.push(root);
+
+        int i = 1;
+        while (i < n) {
+            Node* current = q.front();
+            q.pop();
+
+            // Insert left child
+            if (i < n && inputs[i] != -1) {
+                current->left = new Node(inputs[i]);
+                q.push(current->left);
+            }
+            i++;
+
+            // Insert right child
+            if (i < n && inputs[i] != -1) {
+                current->right = new Node(inputs[i]);
+                q.push(current->right);
+            }
+            i++;
+        }
+
+        return root;
+    }
+};
+
+int main() {
+    Solution tree;
+
+    // Input number of nodes
+    int n;
+    cout << "Enter number of nodes: ";
+    cin >> n;
+
+    // Input nodes for the binary tree (-1 represents NULL)
+    int inputs[n];
+    cout << "Enter node values (-1 for null): ";
+    for (int i = 0; i < n; i++) {
+        cin >> inputs[i];
+    }
+
+    // Build the binary tree from inputs
+    Node* root = tree.buildTree(inputs, n);
+
+    // Convert binary tree to DLL
+    Node* head = tree.bToDLL(root);
+
+    // Print the DLL
+    cout << "Doubly Linked List: ";
+    tree.printList(head);
+
+    return 0;
+}
