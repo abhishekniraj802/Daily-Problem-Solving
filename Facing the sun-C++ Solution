@@ -1,0 +1,53 @@
+#include<bits/stdc++.h>
+using namespace std;
+class Solution{
+int countBuildings(vector<int> &height) {
+        int count = 1;
+        int maxE = height[0];
+        for(int i = 1; i < height.size(); i++){
+            if(height[i] > maxE){
+                count++;
+                maxE = height[i];
+            }
+        }
+        return count;
+    }
+};
+
+int main() {
+
+int t;
+
+cin >> t;
+
+cin.ignore();
+
+while (t--) {
+
+vector<int> height;
+
+string input;
+
+getline(cin, input);
+
+stringstream ss(input);
+
+int number;
+
+while (ss >> number) {
+
+height.push_back(number);
+
+}
+
+Sulution ob;
+
+int ans = ob.countBuildings(height);
+
+cout << ans << endl;
+
+}
+
+return 0;
+
+}
