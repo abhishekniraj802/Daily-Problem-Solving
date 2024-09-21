@@ -1,0 +1,138 @@
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+// Node structure definition
+class Node {
+public:
+    int data;
+    Node *next;
+    Node *random;
+
+    Node(int data) {
+        this->data = data;
+        this->next = NULL;
+        this->random = NULL;
+    }
+};
+
+class Solution {
+public:
+    // Function to clone a linked list with next and random pointer
+    Node* copyList(Node* head) {
+        if (!head)
+            return NULL;
+
+        Node* curr = head;
+
+        // Step 1: Create new nodes and insert them after each original node
+        while (curr) {
+            Node* newNode = new Node(curr->data);
+            newNode->next = curr->next;
+            curr->next = newNode;
+            curr = newNode->next;
+        }
+
+        // Step 2: Assign random pointers to the new nodes
+        curr = head;
+        while (curr) {
+            if (curr->random) {
+                curr->next->random = curr->random->next;
+            }
+            curr = curr->next->next;
+        }
+
+        // Step 3: Separate the original list from the cloned list
+        Node* original = head;
+        Node* copy = head->next;
+        Node* temp = copy;
+        
+        while (original) {
+            original->next = original->next->next;
+            if (copy->next) {
+                copy->next = copy->next->next;
+            }
+            original = original->next;
+            copy = copy->next;
+        }
+
+        return temp;
+    }
+
+    // Helper function to print the list along with random pointers
+    void printList(Node* head) {
+        Node* temp = head;
+        while (temp) {
+            int randomData = (temp->random) ? temp->random->data : -1;
+            cout << "Node Data: " << temp->data << ", Random Data: " << randomData << endl;
+            temp = temp->next;
+        }
+    }
+
+    // Helper function to create the list with next and random pointers
+    Node* createList(int values[], int randomIndices[], int n) {
+        if (n == 0) return NULL;
+
+        Node* head = new Node(values[0]);
+        Node* curr = head;
+        unordered_map<int, Node*> nodeMap;
+        nodeMap[0] = head;
+
+        // Create the linked list with next pointers
+        for (int i = 1; i < n; i++) {
+            Node* newNode = new Node(values[i]);
+            curr->next = newNode;
+            curr = newNode;
+            nodeMap[i] = newNode;
+        }
+
+        // Assign random pointers
+        curr = head;
+        for (int i = 0; i < n; i++) {
+            if (randomIndices[i] != -1) {
+                nodeMap[i]->random = nodeMap[randomIndices[i]];
+            }
+        }
+
+        return head;
+    }
+};
+
+int main() {
+    Solution solution;
+
+    // Input for the number of nodes
+    int n;
+    cout << "Enter number of nodes: ";
+    cin >> n;
+
+    // Input for the node values
+    int values[n];
+    cout << "Enter the node values:" << endl;
+    for (int i = 0; i < n; i++) {
+        cin >> values[i];
+    }
+
+    // Input for the random pointer indices (-1 for null)
+    int randomIndices[n];
+    cout << "Enter the random pointer indices (-1 for null):" << endl;
+    for (int i = 0; i < n; i++) {
+        cin >> randomIndices[i];
+    }
+
+    // Create the linked list
+    Node* head = solution.createList(values, randomIndices, n);
+
+    // Print the original list
+    cout << "Original List:" << endl;
+    solution.printList(head);
+
+    // Clone the list
+    Node* clonedList = solution.copyList(head);
+
+    // Print the cloned list
+    cout << "Cloned List:" << endl;
+    solution.printList(clonedList);
+
+    return 0;
+}
