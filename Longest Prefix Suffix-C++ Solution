@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class Solution {
+public:
+    int lps(string str) {
+        int n = str.size();
+        vector<int> kmp(n);
+
+        int i = 0;
+        for (int j = 1; j < n; j++) {
+            if (str[i] == str[j]) {
+                kmp[j] = ++i;
+            } else {
+                while (i > 0) {
+                    i = kmp[i - 1];
+                    if (str[i] == str[j]) {
+                        i++;
+                        break;
+                    }
+                }
+                kmp[j] = i;
+            }
+        }
+        return kmp[n - 1];
+    }
+
+    void processInputs(int n, vector<string>& strings) {
+        for (int i = 0; i < n; i++) {
+            cout << lps(strings[i]) << endl;
+        }
+    }
+};
+
+int main() {
+    int n;
+    cout << "Enter the number of strings: ";
+    cin >> n;
+    cin.ignore(); // Consume the newline character after the integer input
+
+    vector<string> strings(n);
+    cout << "Enter the strings:" << endl;
+    for (int i = 0; i < n; i++) {
+        getline(cin, strings[i]);
+    }
+
+    Solution sol;
+    sol.processInputs(n, strings);
+
+    return 0;
+}
