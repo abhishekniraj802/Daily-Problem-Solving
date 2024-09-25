@@ -1,0 +1,111 @@
+#include <iostream>
+using namespace std;
+
+// Definition for singly-linked list node
+struct Node {
+    int data;
+    Node* next;
+    
+    Node(int val) {
+        data = val;
+        next = NULL;
+    }
+};
+
+class Solution {
+public:
+    // Function to reverse a linked list
+    Node* reverse(Node* head) {
+        Node* curr = head;
+        Node* prev = NULL;
+        Node* next = NULL;
+        
+        while (curr != NULL) {
+            next = curr->next; // Save the next node
+            curr->next = prev; // Reverse the current node's pointer
+            prev = curr;       // Move the prev pointer forward
+            curr = next;       // Move to the next node
+        }
+        
+        return prev; // Return the new head (which is the last node of the original list)
+    }
+
+    // Function to check whether the list is a palindrome
+    bool isPalindrome(Node* head) {
+        if (head == NULL || head->next == NULL) return true; // Empty or single node list is a palindrome
+        
+        // Find the middle of the list
+        Node* slow = head;
+        Node* fast = head->next;
+        while (fast != NULL && fast->next != NULL) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        // Reverse the second half of the list
+        Node* rev = reverse(slow->next);
+        slow->next = NULL; // Optional: detach the first half from the second half
+
+        // Compare the first half and the reversed second half
+        Node* curr = head;
+        while (rev != NULL) {
+            if (rev->data != curr->data) return false;
+            rev = rev->next;
+            curr = curr->next;
+        }
+        
+        return true;
+    }
+
+    // Function to insert a node at the end of the linked list
+    Node* insert(Node* head, int data) {
+        Node* newNode = new Node(data);
+        if (head == NULL) return newNode;
+        
+        Node* temp = head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+        return head;
+    }
+
+    // Function to print a linked list (optional for debugging)
+    void printList(Node* head) {
+        while (head != NULL) {
+            cout << head->data << " ";
+            head = head->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    Solution solution;
+    int n; // Number of test cases
+    cout << "Enter the number of test cases: ";
+    cin >> n;
+    
+    for (int i = 0; i < n; i++) {
+        int size;
+        cout << "Enter the number of elements in list " << (i + 1) << ": ";
+        cin >> size;
+
+        Node* head = NULL;
+        cout << "Enter the elements of the list:\n";
+        for (int j = 0; j < size; j++) {
+            int element;
+            cin >> element;
+            head = solution.insert(head, element);
+        }
+
+        // Check if the linked list is a palindrome
+        bool result = solution.isPalindrome(head);
+        if (result)
+            cout << "List " << (i + 1) << " is a palindrome." << endl;
+        else
+            cout << "List " << (i + 1) << " is not a palindrome." << endl;
+    }
+
+    return 0;
+}
