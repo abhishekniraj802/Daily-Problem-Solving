@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+using namespace std;
+class Solution {
+  public:
+    // Function to return a list of integers denoting the node
+    // values of both the BST in a sorted order.
+    
+    void inorder(Node* root,vector<int> &in){
+        if(root==NULL) return;
+        
+        inorder(root->left,in);
+        in.push_back(root->data);
+        inorder(root->right,in);
+    }
+    vector<int> merge(Node *root1, Node *root2) {
+        // Your code here
+       
+       vector<int> in;
+       inorder(root1,in);
+       inorder(root2,in);
+       sort(in.begin(),in.end());
+       
+       return in;
+        
+        
+    }
+};
+
+int main() {
+    // Example to create multiple BSTs
+    // First BST
+    Node* root1 = newNode(3);
+    root1->left = newNode(1);
+    root1->right = newNode(5);
+
+    // Second BST
+    Node* root2 = newNode(4);
+    root2->left = newNode(2);
+    root2->right = newNode(6);
+
+    // Third BST (optional, for demonstration)
+    Node* root3 = newNode(7);
+    root3->left = newNode(5);
+    root3->right = newNode(8);
+
+    // Add all the roots into a vector
+    vector<Node*> roots = {root1, root2, root3}; // Add more if needed
+
+    Solution solution;
+    vector<int> result = solution.merge(roots);
+
+    // Output the merged result
+    for (int val : result) {
+        cout << val << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
