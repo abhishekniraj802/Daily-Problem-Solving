@@ -1,0 +1,105 @@
+#include <iostream>
+using namespace std;
+
+// Node definition
+struct Node {
+    int data;
+    Node* next;
+    Node(int x) {
+        data = x;
+        next = nullptr;
+    }
+};
+
+// Solution class to handle operations on the lists
+class Solution {
+public:
+    long long multiplyTwoLists(Node* first, Node* second) {
+        Node* temp1 = first;
+        Node* temp2 = second;
+        long long sum1 = 0, sum2 = 0;
+        long long mod = 1e9+7;
+        
+        while (temp1 != nullptr) {
+            sum1 = (sum1 * 10 + temp1->data) % mod;
+            temp1 = temp1->next;
+        }
+        while (temp2 != nullptr) {
+            sum2 = (sum2 * 10 + temp2->data) % mod;
+            temp2 = temp2->next;
+        }
+        
+        return (sum1 * sum2) % mod;
+    }
+};
+
+// Function to push a new node at the front of the list
+void push(Node*& head_ref, int new_data) {
+    Node* new_node = new Node(new_data);
+    new_node->next = head_ref;
+    head_ref = new_node;
+}
+
+// Function to reverse the linked list
+void reverse(Node*& head) {
+    Node* prev = nullptr;
+    Node* curr = head;
+    Node* next;
+    
+    while (curr != nullptr) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    head = prev;
+}
+
+// Function to print the list
+void printList(Node* Node) {
+    while (Node != nullptr) {
+        cout << Node->data << " ";
+        Node = Node->next;
+    }
+    cout << endl;
+}
+
+// Main function to read input and execute the solution
+int main() {
+    int t;
+    cin >> t;
+    cin.ignore(); // To consume the newline after the integer input
+    
+    while (t--) {
+        Node* first = nullptr;
+        Node* second = nullptr;
+        
+        // Reading the first linked list
+        string input;
+        getline(cin, input);
+        stringstream ss(input);
+        int val;
+        while (ss >> val) {
+            push(first, val);
+        }
+        
+        // Reading the second linked list
+        string input2;
+        getline(cin, input2);
+        stringstream ss2(input2);
+        while (ss2 >> val) {
+            push(second, val);
+        }
+        
+        // Reverse both lists before multiplying
+        reverse(first);
+        reverse(second);
+        
+        // Multiply the two lists
+        Solution ob;
+        long long result = ob.multiplyTwoLists(first, second);
+        cout << result << endl;
+    }
+    
+    return 0;
+}
